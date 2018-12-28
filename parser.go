@@ -750,6 +750,12 @@ func (parser *Parser) parseAnonymousField(pkgName string, field *ast.Field) (map
 		if ftypeX, ok := ftype.X.(*ast.Ident); ok {
 			fullTypeName = ftypeX.Name
 		}
+	case *ast.SelectorExpr:
+		if ftypeX, ok := ftype.X.(*ast.Ident); ok {
+			fullTypeName = ftypeX.Name + "." + ftype.Sel.Name
+			// typedef := parser.TypeDefinitions[pkgName][typeName]
+		}
+
 	default:
 		log.Printf("Field type of '%T' is unsupported. Skipping", ftype)
 		return properties, []string{}
@@ -1022,7 +1028,7 @@ func Skip(f os.FileInfo) error {
 	}
 
 	// exclude all hidden folder
-	if f.IsDir() && len(f.Name()) > 1 && f.Name()[0] == '.' {
+	if f.IsDir() && len(f.Name()) > 1 && f.Name()[0] == '.' && strings.Index(f.Name(), "..") < 0 {
 		return filepath.SkipDir
 	}
 	return nil

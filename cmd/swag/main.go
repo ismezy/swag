@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/pkg/errors"
-	"github.com/swaggo/swag"
-	"github.com/swaggo/swag/gen"
+	"github.com/ismezy/swag"
+	"github.com/ismezy/swag/gen"
 	"github.com/urfave/cli"
 )
 
@@ -24,16 +24,22 @@ func main() {
 				mainAPIFile := c.String("generalInfo")
 				swaggerConfDir := c.String("swagger")
 				strategy := c.String("propertyStrategy")
+				searchDir := c.String("searchDir")
 				switch strategy {
 				case swag.CamelCase, swag.SnakeCase, swag.PascalCase:
 				default:
 					return errors.Errorf("not supported %s propertyStrategy", strategy)
 				}
 
-				gen.New().Build(dir, mainAPIFile, swaggerConfDir, strategy)
+				gen.New().Build(dir, searchDir, mainAPIFile, swaggerConfDir, strategy)
 				return nil
 			},
 			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "searchDir, sd",
+					Value: "./",
+					Usage: "Directory you want to search",
+				},
 				cli.StringFlag{
 					Name:  "generalInfo, g",
 					Value: "main.go",

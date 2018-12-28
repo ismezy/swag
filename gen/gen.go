@@ -10,7 +10,7 @@ import (
 
 	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
-	"github.com/swaggo/swag"
+	"github.com/ismezy/swag"
 )
 
 // Gen presents a generate tool for swag.
@@ -23,7 +23,7 @@ func New() *Gen {
 }
 
 // Build builds swagger json file  for gived searchDir and mainAPIFile. Returns json
-func (g *Gen) Build(searchDir, mainAPIFile, swaggerConfDir, propNamingStrategy string) error {
+func (g *Gen) Build(targetDir, searchDir, mainAPIFile, swaggerConfDir, propNamingStrategy string) error {
 	log.Println("Generate swagger docs....")
 	p := swag.New()
 	p.PropNamingStrategy = propNamingStrategy
@@ -35,8 +35,8 @@ func (g *Gen) Build(searchDir, mainAPIFile, swaggerConfDir, propNamingStrategy s
 		return err
 	}
 
-	os.MkdirAll(path.Join(searchDir, "docs"), os.ModePerm)
-	docs, err := os.Create(path.Join(searchDir, "docs", "docs.go"))
+	os.MkdirAll(path.Join(targetDir, "docs"), os.ModePerm)
+	docs, err := os.Create(path.Join(targetDir, "docs", "docs.go"))
 	if err != nil {
 		return err
 	}
@@ -88,7 +88,7 @@ import (
 	"bytes"
 
 	"github.com/alecthomas/template"
-	"github.com/swaggo/swag"
+	"github.com/ismezy/swag"
 )
 
 var doc = {{.Doc}}
